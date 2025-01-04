@@ -9,8 +9,11 @@ passport.use(
     async (email, password, done) => {
       try {
         const user = await User.findOne({ email });
-        if (!user || !(await user.matchPassword(password))) {
-          return done(null, false, { message: 'Invalid credentials' });
+        if (!user) {
+          return done(null, false, { message: 'User not found' });
+        }
+        if (!(await user.matchPassword(password))) {
+          return done(null, false, { message: 'Incorrect password' });
         }
         return done(null, user);
       } catch (err) {
@@ -25,3 +28,5 @@ passport.deserializeUser(async (id, done) => {
   const user = await User.findById(id);
   done(null, user);
 });
+
+module.exports = passport;
