@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const passport = require('passport');
+const passport = require('./config/passport');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
@@ -11,7 +11,7 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 app.use(
-  session({ secret: 'your_session_secret', resave: false, saveUninitialized: false })
+  session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false })
 );
 app.use(passport.initialize());
 app.use(passport.session());
