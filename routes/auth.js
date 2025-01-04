@@ -48,4 +48,24 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
+// Google Sign-In route
+router.get('/google', 
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+// Google callback route
+router.get('/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) => {
+    // Successful authentication
+    try {
+      const token = jwt.sign({ id: req.user.id }, JWT_SECRET, { expiresIn: '1h' });
+      res.cookie('token', token, { httpOnly: true });
+      res.redirect('/'); // Redirect to your homepage or dashboard
+    } catch (err) {
+      res.status(500).json({ error: 'An error occurred during authentication' });
+    }
+  }
+);
+
 module.exports = router;

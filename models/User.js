@@ -4,13 +4,15 @@ const bcrypt = require("bcrypt");
 const UserSchema = new mongoose.Schema({
   email: { type: String, unique: true },
   password: { type: String },
+  googleId: { type: String },
 });
 
 // Hash password before saving
 UserSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
+    if (!this.password) {
+      throw new Error("Password is required for hashing");
+    }
   }
   next();
 });
