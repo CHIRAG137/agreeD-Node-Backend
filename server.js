@@ -4,6 +4,7 @@ const passport = require('./config/passport');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
+const cors = require("cors");
 const docusignRoutes = require('./routes/docusignRoutes');
 const uploadRoutes = require("./routes/uploadDocumentRoutes");
 require('dotenv').config();
@@ -12,6 +13,7 @@ require('./routes/auth');
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors());
 app.use(
   session({ secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: false })
 );

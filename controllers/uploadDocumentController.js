@@ -27,8 +27,22 @@ const extractContent = async (file) => {
 
 // Function to generate personalized email using the extracted content
 const generateEmail = async (extractedText) => {
-  const emailPrompt = `You are an email assistant. Write a formal email summarizing the agreement based on the following text: ${extractedText}. Please highlight all important details and make sure the email avoids any "agreement traps" or misunderstandings.`;
+    const emailPrompt = `You are an expert email assistant. Write a short, professional, and persuasive email to a client about finalizing an agreement. The email should be clear, concise, and no longer than 300 words. It should include the below 4 points as paragraphs:
 
+1. A warm greeting to the client.
+2. A brief explanation of the email's purpose (to finalize the agreement).
+3. The key agreement details:
+   - Client details if available (name or relevant information).
+   - Important dates (effective date, completion date).
+   - Any costs or payment terms.
+   - Contact person for any questions or clarifications.
+4. A call to action, encouraging the client to confirm their acceptance of the agreement by a specified date.
+   
+Ensure the email is professional, engaging, and easy to read, with the most important details highlighted for the client to review and take action.
+
+The following text provides all the necessary details for the email: ${extractedText}`;
+
+    
   try {
     const requestPayload = {
       contents: [{
