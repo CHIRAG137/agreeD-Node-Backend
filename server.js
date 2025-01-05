@@ -5,6 +5,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const authRoutes = require('./routes/auth');
 const docusignRoutes = require('./routes/docusignRoutes');
+const uploadRoutes = require("./routes/uploadDocumentRoutes");
 require('dotenv').config();
 require('./routes/auth'); 
 
@@ -19,6 +20,7 @@ app.use(passport.session());
 
 app.use('/auth', authRoutes);
 app.use('/api/docusign', docusignRoutes);
+app.use('/api', uploadRoutes);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
