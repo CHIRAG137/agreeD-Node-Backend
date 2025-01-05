@@ -37,7 +37,7 @@ const generateEmail = async (extractedText) => {
     };
 
     const response = await axios.post(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=AIzaSyAXe7NUcvXi90GkrjlI1vJxNeVQqCJnJL8',
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
       requestPayload,
       {
         headers: {
