@@ -10,4 +10,6 @@ router.post('/create-recipient-view/:envelopeId', envelopeController.createRecip
 
 router.post('/create-template', envelopeController.createTemplate);
 
+router.get('/fetch-templates', envelopeController.getAllTemplates);
+
 module.exports = router;

@@ -5,8 +5,8 @@ const { EnvelopesApi, EnvelopeDefinition, Signer, RecipientViewRequest } =
 require('dotenv').config();
 
 const apiClient = new docusign.ApiClient();
-const accessToken = "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwCAm-mi8y3dSAgAgAOuBPwt3UgCADbPPWtPZjxJoypVoNHVIgAVAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADc5YmQ1OTU1LTExMmUtNDk0OS1hZDZmLTdiYjc2MGI5Y2I5YiIAJAAAADc5YmQ1OTU1LTExMmUtNDk0OS1hZDZmLTdiYjc2MGI5Y2I5YhIAAQAAAAYAAABqd3RfYnIjACQAAAA3OWJkNTk1NS0xMTJlLTQ5NDktYWQ2Zi03YmI3NjBiOWNiOWI.wlzTGdQj6pPKBOTs_7sSrdbM8iEQO85G6YMCMd_NlV5HvAbzdrur0BL6jBVqTHzdLQ0AfZv00yEV4IRXoMrZkciR7NFBUNp0ui7mfy4wgGfvGGkXWboWvOe3jdZRI19LBn_mLHPrfopQv6P9GEvjzqAV_hlcL6DXKsaRQDlvRwZB2J39JHzzPq-8rW3pwKaGtSU7dZ1p5609mGj6pcTiyDtAATtAqXJjazNuqEGHAthyMejifAoIaGsaRZxqjHBgLibJrU_jDUM3ErgqoNhtnm2orWfiPBGEioQM7iPU5Kq2R4s8yfwRbNqu-fXtHyaNVQxXqBxRitJwUEOWj7-vaQ";
-const accountId = "32010460"; 
+const accessToken = "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAAe7V3-C3dSAgAAON52QAu3UgCALYFyWWWsohJmgIkAuAvy98VAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADQ3NWY0NTY1LWYyZjQtNDkzZS1iYTIzLTZkYzEzNmM2YTE1YiIAJAAAADQ3NWY0NTY1LWYyZjQtNDkzZS1iYTIzLTZkYzEzNmM2YTE1YhIAAQAAAAYAAABqd3RfYnIjACQAAAA0NzVmNDU2NS1mMmY0LTQ5M2UtYmEyMy02ZGMxMzZjNmExNWI.IjSVvkCnKZr66Y7WmeoGSnPNqMWynmyeu5GDfjO-d7Ap--vXeWndsPj0H-8ydcKIt7nxmy7jzcbdy0CI6IT3S6wyDWpoYWriw9-T3HMgS-pVk8iGAN4j9qnOBbf1Mx0pAeWoslMR6Vg11F0Ck8ovlRjXX4nnUXNtkKzO8x-glGgWLGsnKqD96TMMeCqeNjtNS_icPsMt1I0ZvU0m2vp41wJlXQsBVLrNb8t3Q_ALI_psk2eHzhAr1YopYQQJVzEsyZYCjQ1wCRC8zhqxBgtOmNdz7ZQYLczbHlstpUJ7XnwlORlenZxDuIqq9Pgc0q_LZ7WCxzz2eh3D7TiH0SfByQ";
+const accountId = "32011280"; 
 const basePath = "https://demo.docusign.net/restapi";
 
 apiClient.setBasePath(basePath);
@@ -162,8 +162,33 @@ async function createTemplate(req, res){
   }
 };
 
+async function getAllTemplates(req, res) {
+  try {
+    // Configure API client
+    const apiClient = new docusign.ApiClient();
+    apiClient.setBasePath(basePath);
+    apiClient.addDefaultHeader('Authorization', `Bearer ${accessToken}`);
+
+    const templatesApi = new docusign.TemplatesApi(apiClient);
+
+    // List templates
+    const templates = await templatesApi.listTemplates(accountId);
+
+    // Check if templates exist and return them
+    if (templates.envelopes && templates.envelopes.length > 0) {
+      res.status(200).json({ message: 'Templates retrieved successfully', templates: templates.envelopes });
+    } else {
+      res.status(404).json({ message: 'No templates found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving templates:', error);
+    res.status(500).json({ error: 'Failed to retrieve templates', details: error.message });
+  }
+}
+
 module.exports = {
   createAndSendEnvelope,
   createRecipientView,
-  createTemplate
+  createTemplate,
+  getAllTemplates
 };
