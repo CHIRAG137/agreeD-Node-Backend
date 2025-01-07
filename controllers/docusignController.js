@@ -5,8 +5,8 @@ const { EnvelopesApi, EnvelopeDefinition, Signer, RecipientViewRequest } =
 require('dotenv').config();
 
 const apiClient = new docusign.ApiClient();
-const accessToken = "eyJ0eXAiOiJNVCIsImFsZyI6IlJTMjU2Iiwia2lkIjoiNjgxODVmZjEtNGU1MS00Y2U5LWFmMWMtNjg5ODEyMjAzMzE3In0.AQoAAAABAAUABwAAe7V3-C3dSAgAAON52QAu3UgCALYFyWWWsohJmgIkAuAvy98VAAEAAAAYAAIAAAAFAAAAHQAAAA0AJAAAADQ3NWY0NTY1LWYyZjQtNDkzZS1iYTIzLTZkYzEzNmM2YTE1YiIAJAAAADQ3NWY0NTY1LWYyZjQtNDkzZS1iYTIzLTZkYzEzNmM2YTE1YhIAAQAAAAYAAABqd3RfYnIjACQAAAA0NzVmNDU2NS1mMmY0LTQ5M2UtYmEyMy02ZGMxMzZjNmExNWI.IjSVvkCnKZr66Y7WmeoGSnPNqMWynmyeu5GDfjO-d7Ap--vXeWndsPj0H-8ydcKIt7nxmy7jzcbdy0CI6IT3S6wyDWpoYWriw9-T3HMgS-pVk8iGAN4j9qnOBbf1Mx0pAeWoslMR6Vg11F0Ck8ovlRjXX4nnUXNtkKzO8x-glGgWLGsnKqD96TMMeCqeNjtNS_icPsMt1I0ZvU0m2vp41wJlXQsBVLrNb8t3Q_ALI_psk2eHzhAr1YopYQQJVzEsyZYCjQ1wCRC8zhqxBgtOmNdz7ZQYLczbHlstpUJ7XnwlORlenZxDuIqq9Pgc0q_LZ7WCxzz2eh3D7TiH0SfByQ";
-const accountId = "32011280"; 
+const accessToken = process.env.DOCUSIGN_ACCESS_TOKEN;
+const accountId = process.env.DOCUSIGN_ACCOUNT_ID; 
 const basePath = "https://demo.docusign.net/restapi";
 
 apiClient.setBasePath(basePath);
