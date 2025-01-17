@@ -7,6 +7,10 @@ const authRoutes = require('./routes/auth');
 const cors = require("cors");
 const docusignRoutes = require('./routes/docusignRoutes');
 const uploadRoutes = require("./routes/uploadDocumentRoutes");
+const heygenRoutes = require("./routes/heygenRoutes");
+const axios = require('axios');
+const pdfjsLib = require('pdfjs-dist/legacy/build/pdf'); // Use the legacy build
+
 require('dotenv').config();
 require('./routes/auth'); 
 
@@ -20,9 +24,33 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+
+app.get('/pdf', async (req, res) => {
+  const pdfUrl = 'https://drive.google.com/uc?id=18IdCKn7tPjICk8I2KDwNKjYNIUETQZs4&export=download';
+  
+  try {
+    // Fetch the PDF file as an arraybuffer
+    const response = await axios.get(pdfUrl, { responseType: 'arraybuffer' });
+
+    // Load the PDF document using pdfjs
+    const pdfDoc = await pdfjsLib.getDocument({ data: response.data }).promise;
+
+    // Log the total number of pages
+    console.log('Total number of pages:', pdfDoc.numPages);
+
+    // Send the PDF file to the client
+    res.set('Content-Type', 'application/pdf');
+    res.send(response.data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error fetching the PDF file');
+  }
+});
+
 app.use('/auth', authRoutes);
 app.use('/api/docusign', docusignRoutes);
 app.use('/api', uploadRoutes);
+app.use('/api/heygen', heygenRoutes);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
