@@ -1,4 +1,3 @@
-const express = require("express");
 const axios = require("axios");
 
 const HEYGEN_API_KEY =process.env.HEYGEN_API_KEY
