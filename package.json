@@ -20,6 +20,7 @@
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
     "pdf-parse": "^1.1.1",
-    "pdfjs-dist": "^2.10.377"
+    "pdfjs-dist": "^2.10.377",
+    "uuid": "^11.0.5"
   }
 }
