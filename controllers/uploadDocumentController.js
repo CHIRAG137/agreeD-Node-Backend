@@ -99,6 +99,7 @@ const uploadFile = async (req, res) => {
     return res.json({
       message: 'File uploaded and email generated successfully.',
       emailContent: emailContent,
+      filePath: filePath
     });
   } catch (error) {
     console.error(error);
