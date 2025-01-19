@@ -1,33 +1,14 @@
 const axios = require("axios");
 
-const HEYGEN_API_KEY =process.env.HEYGEN_API_KEY
+const HEYGEN_API_KEY = process.env.HEYGEN_API_KEY;
 
 // Controller to handle video generation
 exports.generateVideoController = async (req, res) => {
-  const videoInputs = req.body.video_inputs || [
-    {
-      character: {
-        type: "avatar",
-        avatar_id: "Angela-inTshirt-20220820",
-        avatar_style: "normal",
-      },
-      voice: {
-        type: "text",
-        input_text: "Welcome to the HeyGen API!",
-        voice_id: "1bd001e7e50f421d891986aad5158bc8",
-        speed: 1.1,
-      },
-    },
-  ];
-
-  const dimension = req.body.dimension || {
-    width: 1280,
-    height: 720,
-  };
-
+  const videoInputs = req.body;
+  console.log(videoInputs)
   const payload = {
-    video_inputs: videoInputs,
-    dimension: dimension,
+    video_inputs: videoInputs.video_inputs,
+    dimension: videoInputs.dimension,
   };
 
   try {
