@@ -1,4 +1,3 @@
-// Required dependencies
 const axios = require("axios");
 
 // API key from environment variables
@@ -8,19 +7,21 @@ const HEYGEN_API_KEY = process.env.HEYGEN_API_KEY;
 const HEYGEN_API_BASE_URL = "https://api.heygen.com";
 
 /**
- * Controller to handle video generation.
+ * Controller to handle video generation and status retrieval.
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
  */
 exports.generateVideoController = async (req, res) => {
-  const { video_inputs, dimension } = req.body;
+  const videoInputs = req.body;
 
-  // Payload for video generation
-  const payload = { video_inputs, dimension };
+  const payload = {
+    video_inputs: videoInputs.video_inputs,
+    dimension: videoInputs.dimension,
+  };
 
   try {
     // Make API call to generate video
-    const { data } = await axios.post(
+    const videoGenerationResponse = await axios.post(
       `${HEYGEN_API_BASE_URL}/v2/video/generate`,
       payload,
       {
@@ -31,14 +32,18 @@ exports.generateVideoController = async (req, res) => {
       }
     );
 
+    const video_id = videoGenerationResponse.data.data.video_id;
+
     res.status(200).json({
-      message: "Video generated successfully!",
-      data,
+      message: "Video generated and status retrieved successfully!",
+      data: {
+        video_id
+      },
     });
   } catch (error) {
-    console.error("Error generating video:", error);
+    console.error("Error generating video or fetching status:", error);
     res.status(500).json({
-      message: "Failed to generate video.",
+      message: "Failed to generate video or retrieve status.",
       error: error.response?.data || error.message,
     });
   }
