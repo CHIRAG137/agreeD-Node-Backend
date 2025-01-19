@@ -1,50 +1,46 @@
+const docuSignAuth = require('./docusignAuth'); // Path to the file above
 const docusign = require("docusign-esign");
 const fs = require('fs');
 const { EnvelopesApi, EnvelopeDefinition, Signer, RecipientViewRequest } =
   docusign;
 require('dotenv').config();
 
-const apiClient = new docusign.ApiClient();
-const accessToken = process.env.DOCUSIGN_ACCESS_TOKEN;
-const accountId = process.env.DOCUSIGN_ACCOUNT_ID; 
-const basePath = "https://demo.docusign.net/restapi";
-
-apiClient.setBasePath(basePath);
-apiClient.addDefaultHeader("Authorization", `Bearer ${accessToken}`);
+const accountId = process.env.DOCUSIGN_ACCOUNT_ID;
 
 // Create an envelope and send for signing
 async function createAndSendEnvelope(req, res) {
   try {
-    // Create a signer
+    // Get a fresh access token
+    const accessToken = await docuSignAuth.getAccessToken();
+    
+    // Get the API client with the latest token
+    const apiClient = docuSignAuth.apiClient;
+
+    // Rest of your existing envelope creation code...
     const signer = new Signer();
     signer.email = req.body.signerEmail;
     signer.name = req.body.signerName;
     signer.recipientId = "1";
     signer.routingOrder = "1";
 
-    // Create the envelope definition
     const envelopeDefinition = new EnvelopeDefinition();
     envelopeDefinition.emailSubject = "Please Sign this Document";
-    envelopeDefinition.status = "sent"; 
+    envelopeDefinition.status = "sent";
 
-    // Read the document from the file system
-    const filePath = req.body.filePath; 
+    const filePath = req.body.filePath;
     const documentBuffer = fs.readFileSync(filePath);
-
-    // Convert document to base64
     const documentBase64 = documentBuffer.toString("base64");
 
     const doc = {
       documentBase64: documentBase64,
-      name: "Sample Document", 
-      fileExtension: "pdf", 
-      documentId: "1", 
+      name: "Sample Document",
+      fileExtension: "pdf",
+      documentId: "1",
     };
 
     envelopeDefinition.documents = [doc];
     envelopeDefinition.recipients = { signers: [signer] };
 
-    // Create the envelope and send it for signing
     const envelopesApi = new EnvelopesApi(apiClient);
     const results = await envelopesApi.createEnvelope(accountId, {
       envelopeDefinition,
