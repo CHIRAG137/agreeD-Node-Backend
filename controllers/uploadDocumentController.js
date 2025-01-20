@@ -28,6 +28,66 @@ const extractContent = async (file) => {
   }
 };
 
+const extractStructuredDetails = async (text) => {
+  const detailsPrompt = `Extract and return the following structured details from the given text in JSON format with proper keys:
+
+{
+  "clientName": "Name of the client if mentioned, otherwise null",
+  "contactPerson": "Name of the contact person if mentioned, otherwise null",
+  "dates": ["List of all dates found in the text"],
+  "address": "Address if found, otherwise null",
+  "paymentTerms": "Cost or payment terms if mentioned, otherwise null",
+  "emailAddresses": [
+    {
+      "email": "Email address found",
+      "entity": "The associated entity or person (if available)"
+    }
+  ],
+  "phoneNumbers": [
+    {
+      "phoneNumber": "Phone number found",
+      "entity": "The associated entity or person (if available)"
+    }
+  ]
+}
+
+Text: ${text}`;
+
+  try {
+    const requestPayload = {
+      contents: [
+        {
+          parts: [{ text: detailsPrompt }],
+        },
+      ],
+    };
+
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      requestPayload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const rawText = response.data.candidates[0].content.parts[0].text;
+
+    // Extract JSON between the ```json markers
+    const jsonMatch = rawText.match(/```json\s([\s\S]*?)\s```/);
+
+    if (jsonMatch && jsonMatch[1]) {
+      const structuredDetails = JSON.parse(jsonMatch[1]);
+      return structuredDetails;
+    } else {
+      throw new Error("Failed to parse JSON from API response");
+    }
+  } catch (error) {
+    throw new Error("Error extracting structured details: " + error.message);
+  }
+};
+
 // Function to generate personalized email using the extracted content
 const generateEmail = async (extractedText) => {
   const emailPrompt = `You are an expert email assistant. Write a short, professional, and persuasive email to a client about finalizing an agreement. The email should be clear, concise, and no longer than 300 words. It should include the below 4 points as paragraphs:
@@ -74,7 +134,7 @@ The following text provides all the necessary details for the email: ${extracted
 const uploadFile = async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ error: 'No file uploaded' });
+      return res.status(400).json({ error: "No file uploaded" });
     }
 
     // Ensure the uploads directory exists
@@ -92,14 +152,18 @@ const uploadFile = async (req, res) => {
     // Step 1: Extract content from the uploaded file
     const extractedContent = await extractContent(req.file);
 
-    // Step 2: Generate personalized email using the extracted content
+    // Step 2: Extract structured details from the content
+    const structuredDetails = await extractStructuredDetails(extractedContent);
+
+    // Step 3: Generate personalized email using the extracted content
     const emailContent = await generateEmail(extractedContent);
 
-    // Step 3: Respond with the generated email content
+    // Step 4: Respond with the generated email content
     return res.json({
-      message: 'File uploaded and email generated successfully.',
+      message: "File uploaded and email generated successfully.",
       emailContent: emailContent,
-      filePath: filePath
+      structuredDetails: structuredDetails,
+      filePath: filePath,
     });
   } catch (error) {
     console.error(error);

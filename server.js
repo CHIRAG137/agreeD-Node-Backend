@@ -9,6 +9,7 @@ const docusignRoutes = require('./routes/docusignRoutes');
 const uploadRoutes = require("./routes/uploadDocumentRoutes");
 const heygenRoutes = require("./routes/heygenRoutes");
 const twilioRoutes = require("./routes/twilioRoutes");
+const clientRoutes = require("./routes/clientRoutes");
 const axios = require('axios');
 const pdfjsLib = require('pdfjs-dist/legacy/build/pdf'); // Use the legacy build
 
@@ -53,6 +54,7 @@ app.use('/api/docusign', docusignRoutes);
 app.use('/api', uploadRoutes);
 app.use('/api/heygen', heygenRoutes);
 app.use('/api/twilio', twilioRoutes);
+app.use('/api/client', clientRoutes);
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))

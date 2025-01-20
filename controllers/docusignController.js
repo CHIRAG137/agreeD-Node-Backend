@@ -161,8 +161,10 @@ async function createTemplate(req, res){
 async function getAllTemplates(req, res) {
   try {
     // Configure API client
-    const apiClient = new docusign.ApiClient();
-    apiClient.setBasePath(basePath);
+    const accessToken = await docuSignAuth.getAccessToken();
+
+    const apiClient = docuSignAuth.apiClient;
+    apiClient.setBasePath(process.env.DOCUSIGN_BASE_PATH || 'https://demo.docusign.net/restapi');
     apiClient.addDefaultHeader('Authorization', `Bearer ${accessToken}`);
 
     const templatesApi = new docusign.TemplatesApi(apiClient);
@@ -171,8 +173,8 @@ async function getAllTemplates(req, res) {
     const templates = await templatesApi.listTemplates(accountId);
 
     // Check if templates exist and return them
-    if (templates.envelopes && templates.envelopes.length > 0) {
-      res.status(200).json({ message: 'Templates retrieved successfully', templates: templates.envelopes });
+    if (templates.envelopeTemplates && templates.envelopeTemplates.length > 0) {
+      res.status(200).json({ message: 'Templates retrieved successfully', templates: templates.envelopeTemplates });
     } else {
       res.status(404).json({ message: 'No templates found' });
     }
