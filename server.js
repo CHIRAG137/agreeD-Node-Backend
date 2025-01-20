@@ -12,6 +12,8 @@ const twilioRoutes = require("./routes/twilioRoutes");
 const clientRoutes = require("./routes/clientRoutes");
 const axios = require('axios');
 const pdfjsLib = require('pdfjs-dist/legacy/build/pdf'); // Use the legacy build
+const { checkAndSaveCompletedVideos } = require('./controllers/heygenController');
+const cron = require("node-cron");
 
 require('dotenv').config();
 require('./routes/auth'); 
@@ -55,6 +57,12 @@ app.use('/api', uploadRoutes);
 app.use('/api/heygen', heygenRoutes);
 app.use('/api/twilio', twilioRoutes);
 app.use('/api/client', clientRoutes);
+
+// Schedule the cron job to run every day at 7:00 AM
+cron.schedule("0 7 * * *", async () => {
+  console.log("Starting daily video status check...");
+  await checkAndSaveCompletedVideos();
+});
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected'))
