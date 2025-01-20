@@ -33,7 +33,8 @@ exports.generateVideoController = async (req, res) => {
     );
 
     const video_id = videoGenerationResponse.data.data.video_id;
-
+    console.log(`Video Id is ${video_id}`)
+    
     res.status(200).json({
       message: "Video generated and status retrieved successfully!",
       data: {

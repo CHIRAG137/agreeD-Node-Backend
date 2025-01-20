@@ -21,6 +21,7 @@ const ClientDetailsSchema = new mongoose.Schema({
   emailContent: String,
   subject: String,
   recipientEmail: String,
+  heygenVideoId: String,
   createdAt: { type: Date, default: Date.now },
 });
 
