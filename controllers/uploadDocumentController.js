@@ -34,7 +34,12 @@ const extractStructuredDetails = async (text) => {
 {
   "clientName": "Name of the client if mentioned, otherwise null",
   "contactPerson": "Name of the contact person if mentioned, otherwise null",
-  "dates": ["List of all dates found in the text"],
+  "dates": [
+    {
+      "dateFormat": "Any Date found",
+      "dateType": "The associated date type (for example: Acceptance, etc.)"
+    }
+  ],
   "address": "Address if found, otherwise null",
   "paymentTerms": "Cost or payment terms if mentioned, otherwise null",
   "emailAddresses": [
