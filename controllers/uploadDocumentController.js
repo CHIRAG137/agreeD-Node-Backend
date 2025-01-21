@@ -37,7 +37,7 @@ const extractStructuredDetails = async (text) => {
   "dates": [
     {
       "dateFormat": "Any Date found",
-      "dateType": "The associated date type (for example: Acceptance, etc.)"
+      "dateType": "The associated date type can be any of Effective or Renewal or Expiration or Termination or Review or Payment due or Notification or Grace Period End or Penalty Start or Compliance or Amendment or Signatory or Audit or Event Trigger"
     }
   ],
   "address": "Address if found, otherwise null",
