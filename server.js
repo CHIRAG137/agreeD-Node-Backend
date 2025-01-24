@@ -10,6 +10,7 @@ const uploadRoutes = require("./routes/uploadDocumentRoutes");
 const heygenRoutes = require("./routes/heygenRoutes");
 const twilioRoutes = require("./routes/twilioRoutes");
 const clientRoutes = require("./routes/clientRoutes");
+const chatbotRoutes = require("./routes/chatbotRoutes");
 const axios = require('axios');
 const pdfjsLib = require('pdfjs-dist/legacy/build/pdf'); // Use the legacy build
 const { checkAndSaveCompletedVideos } = require('./controllers/heygenController');
@@ -57,6 +58,7 @@ app.use('/api', uploadRoutes);
 app.use('/api/heygen', heygenRoutes);
 app.use('/api/twilio', twilioRoutes);
 app.use('/api/client', clientRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // Schedule the cron job to run every day at 7:00 AM
 cron.schedule("0 7 * * *", async () => {
