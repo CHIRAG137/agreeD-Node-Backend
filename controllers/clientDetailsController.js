@@ -38,3 +38,13 @@ exports.GetClientData = async (req, res) => {
     res.status(500).send("Error fetching client details: " + error.message);
   }
 };
+
+// Endpoint to get single client details
+exports.GetSingleClientData = async (req, res) => {
+  try {
+    const client = await ClientDetails.findById(req.params.id);
+    res.json(client);
+  } catch (error) {
+    res.status(500).send("Error fetching client details: " + error.message);
+  }
+};
