@@ -23,7 +23,7 @@ async function createAndSendEnvelope(req, res) {
     signer.routingOrder = "1";
 
     const envelopeDefinition = new EnvelopeDefinition();
-    envelopeDefinition.emailSubject = "Please Sign this Document";
+    envelopeDefinition.emailSubject = req.body.emailSubject;
     envelopeDefinition.status = "sent";
 
     const filePath = req.body.filePath;
@@ -173,12 +173,10 @@ async function getAllTemplates(req, res) {
 
     // Check if templates exist and return them
     if (templates.envelopeTemplates && templates.envelopeTemplates.length > 0) {
-      res
-        .status(200)
-        .json({
-          message: "Templates retrieved successfully",
-          templates: templates.envelopeTemplates,
-        });
+      res.status(200).json({
+        message: "Templates retrieved successfully",
+        templates: templates.envelopeTemplates,
+      });
     } else {
       res.status(404).json({ message: "No templates found" });
     }
