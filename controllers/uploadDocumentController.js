@@ -169,6 +169,7 @@ const uploadFile = async (req, res) => {
       emailContent: emailContent,
       structuredDetails: structuredDetails,
       filePath: filePath,
+      extractedContent: extractedContent,
     });
   } catch (error) {
     console.error(error);
