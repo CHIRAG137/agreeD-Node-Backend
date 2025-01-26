@@ -28,6 +28,7 @@ const ClientDetailsSchema = new mongoose.Schema({
   recipientEmail: String,
   heygenVideoId: String,
   heygenVideoLink: String,
+  driveLink: String,
   createdAt: { type: Date, default: Date.now },
 });
 
