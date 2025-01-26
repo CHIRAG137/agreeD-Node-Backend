@@ -3,18 +3,22 @@ const mongoose = require('mongoose');
 const passport = require('./config/passport');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
-const authRoutes = require('./routes/auth');
 const cors = require("cors");
+const axios = require('axios');
+const pdfjsLib = require('pdfjs-dist/legacy/build/pdf');
+
+const authRoutes = require('./routes/auth');
 const docusignRoutes = require('./routes/docusignRoutes');
 const uploadRoutes = require("./routes/uploadDocumentRoutes");
 const heygenRoutes = require("./routes/heygenRoutes");
 const twilioRoutes = require("./routes/twilioRoutes");
 const clientRoutes = require("./routes/clientRoutes");
 const chatbotRoutes = require("./routes/chatbotRoutes");
-const calenderRoutes = require("./routes/googleCalenderController");
-const axios = require('axios');
-const pdfjsLib = require('pdfjs-dist/legacy/build/pdf'); // Use the legacy build
+const calenderRoutes = require("./routes/googleCalenderRoutes");
+const stripeRoutes = require("./routes/stripeRoutes");
+
 const { checkAndSaveCompletedVideos } = require('./controllers/heygenController');
+
 const cron = require("node-cron");
 
 require('dotenv').config();
@@ -61,6 +65,7 @@ app.use('/api/twilio', twilioRoutes);
 app.use('/api/client', clientRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/calender', calenderRoutes);
+app.use('/api/stripe', stripeRoutes);
 
 // Schedule the cron job to run every day at 7:00 AM
 cron.schedule("0 7 * * *", async () => {
