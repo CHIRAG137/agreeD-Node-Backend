@@ -30,36 +30,45 @@ exports.createPaymentIntent = async (req, res) => {
  * Webhook endpoint for Stripe events
  * Endpoint: POST /webhook
  */
-// exports.createStripeWebhook = (req, res) => {
-//   const rawBody = req.body; // Use raw body from middleware
-//   const sig = req.headers["stripe-signature"];
+exports.createStripeWebhook = async (req, res) => {
+  const sig = req.headers["stripe-signature"];
+  const endpointSecret = webhookSecret; // Stripe Webhook Secret
+  let event;
 
-//   let event;
-//   try {
-//     // Verify webhook signature
-//     event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
-//   } catch (err) {
-//     console.error("Webhook signature verification failed:", err.message);
-//     return res.status(400).send(`Webhook Error: ${err.message}`);
-//   }
+  // Verify webhook signature using the raw body
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.error("Error verifying webhook signature:", err);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
 
-//   // Process Stripe event
-//   switch (event.type) {
-//     case "payment_intent.succeeded":
-//       console.log("PaymentIntent succeeded:", event.data.object);
-//       // Handle successful payment
-//       break;
-//     case "payment_intent.payment_failed":
-//       console.log("PaymentIntent failed:", event.data.object);
-//       // Handle failed payment
-//       break;
-//     default:
-//       console.log(`Unhandled event type: ${event.type}`);
-//   }
+  // Handle different types of events
+  switch (event.type) {
+    case "checkout.session.completed":
+      const session = event.data.object;
+      const paymentIntent = session.payment_intent;
 
-//   // Acknowledge receipt of the event
-//   res.status(200).send("Webhook received successfully");
-// };
+      try {
+        const paymentIntentDetails = await stripe.paymentIntents.retrieve(
+          paymentIntent
+        );
+        if (paymentIntentDetails.status === "succeeded") {
+          console.log("Payment successful:", paymentIntentDetails);
+        } else {
+          console.log("Payment failed:", paymentIntentDetails);
+        }
+      } catch (err) {
+        console.error("Error retrieving payment intent:", err);
+      }
+      break;
+
+    default:
+      console.log(`Unhandled event type: ${event.type}`);
+  }
+
+  res.json({ received: true });
+};
 
 exports.createPaymentLink = async (req, res) => {
   try {
