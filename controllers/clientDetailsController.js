@@ -2,7 +2,16 @@ const ClientDetails = require("../models/clientDetailsModel");
 
 exports.saveClientDetails = async (req, res) => {
   try {
-    const { structuredDetails, emailContent, subject, recipientEmail, extractedContent } = req.body;
+    const {
+      structuredDetails,
+      emailContent,
+      subject,
+      recipientEmail,
+      envelopeId,
+      heygenVideoId,
+      driveLink,
+      extractedContent,
+    } = req.body;
 
     // Ensure dates are formatted properly in the structure
     const formattedDetails = {
@@ -18,6 +27,9 @@ exports.saveClientDetails = async (req, res) => {
       emailContent,
       subject,
       recipientEmail,
+      envelopeId,
+      heygenVideoId,
+      driveLink,
       extractedContent,
     });
 

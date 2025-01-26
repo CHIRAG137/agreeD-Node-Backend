@@ -4,6 +4,65 @@ const axios = require("axios");
 const { v4: uuidv4 } = require("uuid");
 const path = require("path");
 const fs = require("fs");
+const { google } = require("googleapis");
+
+// Parse Google credentials from environment variable
+const GOOGLE_CREDENTIALS_JSON = process.env.GOOGLE_CREDENTIALS;
+if (!GOOGLE_CREDENTIALS_JSON) {
+  throw new Error("GOOGLE_CREDENTIALS environment variable is not set.");
+}
+
+const GOOGLE_CREDENTIALS = JSON.parse(GOOGLE_CREDENTIALS_JSON);
+const SCOPES = ["https://www.googleapis.com/auth/drive.file"];
+
+const auth = new google.auth.GoogleAuth({
+  credentials: GOOGLE_CREDENTIALS,
+  scopes: SCOPES,
+});
+
+const drive = google.drive({ version: "v3", auth });
+
+// Helper function to upload a file to Google Drive
+async function uploadFileToDrive(filePath, fileName) {
+  try {
+    const fileMetadata = {
+      name: fileName,
+    };
+
+    const mimeType =
+      path.extname(fileName) === ".pdf"
+        ? "application/pdf"
+        : "application/octet-stream";
+    const media = {
+      mimeType: mimeType,
+      body: fs.createReadStream(filePath),
+    };
+
+    const response = await drive.files.create({
+      resource: fileMetadata,
+      media: media,
+      fields: "id",
+    });
+
+    const fileId = response.data.id;
+
+    // Make the file public
+    await drive.permissions.create({
+      fileId,
+      requestBody: {
+        role: "reader",
+        type: "anyone",
+      },
+    });
+
+    // Get the public URL
+    const driveLink = `https://drive.google.com/file/d/${fileId}/preview`;
+    return driveLink;
+  } catch (error) {
+    console.error("Error uploading file to Google Drive:", error);
+    throw new Error("Failed to upload file to Google Drive");
+  }
+}
 
 // Extract content from PDF or DOCX file
 const extractContent = async (file) => {
@@ -37,7 +96,7 @@ const extractStructuredDetails = async (text) => {
   "dates": [
     {
       "dateFormat": "Any Date found",
-      "dateType": "The associated date type (for example: Acceptance, etc.)"
+      "dateType": "The associated date type can be any of Effective or Renewal or Expiration or Termination or Review or Payment due or Notification or Grace Period End or Penalty Start or Compliance or Amendment or Signatory or Audit or Event Trigger"
     }
   ],
   "address": "Address if found, otherwise null",
@@ -163,6 +222,9 @@ const uploadFile = async (req, res) => {
     // Step 3: Generate personalized email using the extracted content
     const emailContent = await generateEmail(extractedContent);
 
+    // Upload the file to Google Drive
+    const driveLink = await uploadFileToDrive(filePath, "Document");
+    console.log(driveLink);
     // Step 4: Respond with the generated email content
     return res.json({
       message: "File uploaded and email generated successfully.",
@@ -170,6 +232,7 @@ const uploadFile = async (req, res) => {
       structuredDetails: structuredDetails,
       filePath: filePath,
       extractedContent: extractedContent,
+      driveLink: driveLink,
     });
   } catch (error) {
     console.error(error);
