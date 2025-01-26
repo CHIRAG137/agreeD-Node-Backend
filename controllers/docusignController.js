@@ -24,6 +24,7 @@ async function createAndSendEnvelope(req, res) {
 
     const envelopeDefinition = new EnvelopeDefinition();
     envelopeDefinition.emailSubject = req.body.emailSubject;
+    envelopeDefinition.emailBlurb = req.body.emailContent;
     envelopeDefinition.status = "sent";
 
     const filePath = req.body.filePath;
