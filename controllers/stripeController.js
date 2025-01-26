@@ -61,6 +61,46 @@ exports.createPaymentIntent = async (req, res) => {
 //   res.status(200).send("Webhook received successfully");
 // };
 
+exports.createPaymentLink = async (req, res) => {
+  try {
+    const { amount, currency, description, quantity } = req.body;
+
+    // Create a Product dynamically
+    const product = await stripe.products.create({
+      name: description || "Payment",
+    });
+
+    // Create a Price dynamically
+    const price = await stripe.prices.create({
+      unit_amount: amount,
+      currency: currency || "usd",
+      product: product.id,
+    });
+
+    // Create a Payment Link
+    const paymentLink = await stripe.paymentLinks.create({
+      line_items: [
+        {
+          price: price.id,
+          quantity: quantity || 1,
+        },
+      ],
+    });
+
+    // Respond with the payment link URL
+    res.status(200).json({
+      success: true,
+      url: paymentLink.url,
+    });
+  } catch (error) {
+    console.error("Error creating payment link:", error.message);
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 /**
  * Health check endpoint
  * Endpoint: GET /

@@ -14,6 +14,8 @@ router.post("/create-payment-intent", stripeController.createPaymentIntent);
 //   stripeController.createStripeWebhook
 // );
 
+router.post("/create-payment-link", stripeController.createPaymentLink);
+
 // Route to check Stripe API health
 router.get("/", stripeController.checkStripeHealth);
 
