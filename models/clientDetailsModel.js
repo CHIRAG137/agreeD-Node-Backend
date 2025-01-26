@@ -24,6 +24,7 @@ const ClientDetailsSchema = new mongoose.Schema({
     },
   ],
   emailContent: String,
+  randomString: String,
   extractedContent: String,
   subject: String,
   recipientEmail: String,

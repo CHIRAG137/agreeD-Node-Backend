@@ -11,6 +11,7 @@ exports.saveClientDetails = async (req, res) => {
       heygenVideoId,
       driveLink,
       extractedContent,
+      randomString,
     } = req.body;
 
     // Ensure dates are formatted properly in the structure
@@ -31,6 +32,7 @@ exports.saveClientDetails = async (req, res) => {
       heygenVideoId,
       driveLink,
       extractedContent,
+      randomString,
     });
 
     const savedDetails = await newDetails.save();
@@ -56,6 +58,19 @@ exports.GetClientData = async (req, res) => {
 exports.GetSingleClientData = async (req, res) => {
   try {
     const client = await ClientDetails.findById(req.params.id);
+    res.json(client);
+  } catch (error) {
+    res.status(500).send("Error fetching client details: " + error.message);
+  }
+};
+
+// Endpoint to get single client details by randomString
+exports.GetClientDataByRandomString = async (req, res) => {
+  try {
+    if (!req.body.randomString) {
+      throw new Error("randomString is required");
+    }
+    const client = await ClientDetails.findOne({ randomString: req.body.randomString });
     res.json(client);
   } catch (error) {
     res.status(500).send("Error fetching client details: " + error.message);
