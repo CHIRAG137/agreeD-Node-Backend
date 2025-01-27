@@ -31,6 +31,15 @@ const ClientDetailsSchema = new mongoose.Schema({
   heygenVideoId: String,
   heygenVideoLink: String,
   driveLink: String,
+  remainderEmails: [
+    {
+      emailContent: String,
+      date: String,
+      dateType: String, // Related dateType (e.g., "Acceptance")
+      subject: String,
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
   callContent: [
     {
       dateType: String, // Related dateType (e.g., "Acceptance")
