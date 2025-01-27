@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ClientDetailsSchema = new mongoose.Schema({
   clientName: String,
   contactPerson: String,
   dates: [
     {
-      dateFormat: String,  // Date in string format
-      dateType: String,  // Type of the date (e.g., "Acceptance")
+      dateFormat: String, // Date in string format
+      dateType: String, // Type of the date (e.g., "Acceptance")
     },
   ],
   address: String,
@@ -29,7 +29,15 @@ const ClientDetailsSchema = new mongoose.Schema({
   heygenVideoId: String,
   heygenVideoLink: String,
   driveLink: String,
+  callContent: [
+    {
+      dateType: String, // Related dateType (e.g., "Acceptance")
+      date: String, // Related date in string format
+      content: String, // AI-generated phone call content
+      createdAt: { type: Date, default: Date.now }, // Timestamp for the generated content
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('ClientDetails', ClientDetailsSchema);
+module.exports = mongoose.model("ClientDetails", ClientDetailsSchema);
