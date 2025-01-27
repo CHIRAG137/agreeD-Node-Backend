@@ -59,6 +59,19 @@ export const emailReminder = async () => {
         // Send the email
         try {
           await transporter.sendMail(mailOptions);
+          await clientDetailsModel.findOneAndUpdate(
+            { _id: client._id }, // Filter: Find the client by their unique `_id`.
+            {
+              $push: {
+                remainderEmails: {
+                  emailContent: emailContent, // Store the generated email content.
+                  date: date.dateFormat, // The date of the event (e.g., "Jan 27, 2025").
+                  dateType: date.dateType, // The type of event (e.g., "Acceptance").
+                  subject: subject, // Subject of the email.
+                },
+              },
+            }
+          );
           console.log(
             `Reminder email sent to ${client.recipientEmail} for event: ${date.dateType}`
           );

@@ -82,6 +82,7 @@ cron.schedule("0 7 * * *", async () => {
 cron.schedule("0 7 * * *", async () => {
   console.log("Starting sending event remainder mail");
   await emailReminder();
+  console.log("Daily remainder sending completed.");
 });
 
 // Cron Job to run every day at 00:00 (midnight)
