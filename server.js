@@ -17,11 +17,10 @@ const chatbotRoutes = require("./routes/chatbotRoutes");
 const calenderRoutes = require("./routes/googleCalenderRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
 
-const {
-  checkAndSaveCompletedVideos,
-} = require("./controllers/heygenController");
+const { checkAndSaveCompletedVideos } = require("./controllers/heygenController");
 
 const cron = require("node-cron");
+const { emailReminder } = require("./controllers/remainderController");
 
 require("dotenv").config();
 require("./routes/auth");
@@ -41,8 +40,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/pdf", async (req, res) => {
-  const pdfUrl =
-    "https://drive.google.com/uc?id=18IdCKn7tPjICk8I2KDwNKjYNIUETQZs4&export=download";
+  const pdfUrl = "https://drive.google.com/uc?id=18IdCKn7tPjICk8I2KDwNKjYNIUETQZs4&export=download";
 
   try {
     // Fetch the PDF file as an arraybuffer
@@ -77,6 +75,12 @@ app.use("/api/stripe", stripeRoutes);
 cron.schedule("0 7 * * *", async () => {
   console.log("Starting daily video status check...");
   await checkAndSaveCompletedVideos();
+});
+
+// Schedule the cron job to run every day at 7:00 AM
+cron.schedule("0 7 * * *", async () => {
+  console.log("Starting sending event remainder mail");
+  await emailReminder();
 });
 
 mongoose
