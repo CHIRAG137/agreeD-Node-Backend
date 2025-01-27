@@ -95,7 +95,7 @@ const extractStructuredDetails = async (text) => {
   "contactPerson": "Name of the contact person if mentioned, otherwise null",
   "dates": [
     {
-      "dateFormat": "Any Date found",
+      "dateFormat": "Any Date found in format dd-mm-yyyy(If date is not in dd-mm-yyyt format, convert it to proper format),
       "dateType": "The associated date type can be any of Effective or Renewal or Expiration or Termination or Review or Payment due or Notification or Grace Period End or Penalty Start or Compliance or Amendment or Signatory or Audit or Event Trigger"
     }
   ],
@@ -160,7 +160,7 @@ const generateEmail = async (extractedText) => {
 2. A brief explanation of the email's purpose (to finalize the agreement).
 3. The key agreement details:
    - Client details if available (name or relevant information).
-   - Important dates (effective date, completion date).
+   - Important dates (Can be any of Effective or Renewal or Expiration or Termination or Review or Payment due or Notification or Grace Period End or Penalty Start or Compliance or Amendment or Signatory or Audit or Event Trigger).
    - Any costs or payment terms.
    - Contact person for any questions or clarifications.
 4. A call to action, encouraging the client to confirm their acceptance of the agreement by a specified date.
