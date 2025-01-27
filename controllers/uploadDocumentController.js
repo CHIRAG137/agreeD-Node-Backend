@@ -30,9 +30,7 @@ async function uploadFileToDrive(filePath, fileName) {
     };
 
     const mimeType =
-      path.extname(fileName) === ".pdf"
-        ? "application/pdf"
-        : "application/octet-stream";
+      path.extname(fileName) === ".pdf" ? "application/pdf" : "application/octet-stream";
     const media = {
       mimeType: mimeType,
       body: fs.createReadStream(filePath),
@@ -164,6 +162,7 @@ const generateEmail = async (extractedText) => {
    - Any costs or payment terms.
    - Contact person for any questions or clarifications.
 4. A call to action, encouraging the client to confirm their acceptance of the agreement by a specified date.
+5. Add two fields named $xyz and $abc before email closing.
    
 Ensure the email is professional, engaging, and easy to read, with the most important details highlighted for the client to review and take action.
 

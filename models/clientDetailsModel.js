@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const ClientDetailsSchema = new mongoose.Schema({
   clientName: String,
   contactPerson: String,
   dates: [
     {
-      dateFormat: String,  // Date in string format
-      dateType: String,  // Type of the date (e.g., "Acceptance")
+      dateFormat: String, // Date in string format
+      dateType: String, // Type of the date (e.g., "Acceptance")
     },
   ],
   address: String,
@@ -24,6 +24,8 @@ const ClientDetailsSchema = new mongoose.Schema({
     },
   ],
   emailContent: String,
+  randomString: String,
+  extractedContent: String,
   subject: String,
   recipientEmail: String,
   heygenVideoId: String,
@@ -32,4 +34,4 @@ const ClientDetailsSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model('ClientDetails', ClientDetailsSchema);
+module.exports = mongoose.model("ClientDetails", ClientDetailsSchema);
