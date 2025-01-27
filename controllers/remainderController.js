@@ -1,6 +1,6 @@
-import { transporter } from "../config/nodemailerConfig";
-import clientDetailsModel from "../models/clientDetailsModel";
-import moment from "moment";
+const transporter = require("../config/nodemailerConfig");
+const clientDetailsModel = require("../models/clientDetailsModel");
+const moment = require("moment");
 
 // Helper function to check if a given date is greater than the specified range
 const isGreaterDateMMDDYYYY = (date, rangeType = "days", rangeNumber = 1) => {
@@ -10,7 +10,7 @@ const isGreaterDateMMDDYYYY = (date, rangeType = "days", rangeNumber = 1) => {
 };
 
 // Email reminder function
-export const emailReminder = async () => {
+exports.emailReminder = async () => {
   try {
     // Fetch all clients
     const allClients = await clientDetailsModel.find();

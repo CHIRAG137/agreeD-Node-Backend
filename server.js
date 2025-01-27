@@ -6,7 +6,6 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const axios = require("axios");
 const pdfjsLib = require("pdfjs-dist/legacy/build/pdf");
-
 const authRoutes = require("./routes/auth");
 const docusignRoutes = require("./routes/docusignRoutes");
 const uploadRoutes = require("./routes/uploadDocumentRoutes");
@@ -16,7 +15,6 @@ const clientRoutes = require("./routes/clientRoutes");
 const chatbotRoutes = require("./routes/chatbotRoutes");
 const calenderRoutes = require("./routes/googleCalenderRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
-const { checkAndSaveCompletedVideos } = require("./controllers/heygenController");
 const { checkAndSaveCompletedVideos } = require("./controllers/heygenController");
 const twilioController = require("./controllers/twilioController"); // Adjust path if necessary
 
