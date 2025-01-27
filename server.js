@@ -16,8 +16,9 @@ const clientRoutes = require("./routes/clientRoutes");
 const chatbotRoutes = require("./routes/chatbotRoutes");
 const calenderRoutes = require("./routes/googleCalenderRoutes");
 const stripeRoutes = require("./routes/stripeRoutes");
-
 const { checkAndSaveCompletedVideos } = require("./controllers/heygenController");
+const { checkAndSaveCompletedVideos } = require("./controllers/heygenController");
+const twilioController = require("./controllers/twilioController"); // Adjust path if necessary
 
 const cron = require("node-cron");
 const { emailReminder } = require("./controllers/remainderController");
@@ -81,6 +82,26 @@ cron.schedule("0 7 * * *", async () => {
 cron.schedule("0 7 * * *", async () => {
   console.log("Starting sending event remainder mail");
   await emailReminder();
+});
+
+// Cron Job to run every day at 00:00 (midnight)
+cron.schedule("0 0 * * *", async () => {
+  console.log("Running daily call content generation job...");
+  try {
+    // Simulate an Express-like request and response object
+    const req = { body: {}, query: {}, params: {} };
+    const res = {
+      status: (code) => ({
+        json: (message) => console.log(`Response: ${JSON.stringify(message)}`),
+      }),
+    };
+
+    // Call the controller function
+    await twilioController.generateCallContent(req, res);
+    console.log("Daily call content generation completed.");
+  } catch (error) {
+    console.error("Error running daily call content generation job:", error.message);
+  }
 });
 
 mongoose

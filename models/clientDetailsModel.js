@@ -32,6 +32,14 @@ const ClientDetailsSchema = new mongoose.Schema({
   heygenVideoLink: String,
   driveLink: String,
   remainderEmails: [{ emailContent: String, date: String, subject: String }],
+  callContent: [
+    {
+      dateType: String, // Related dateType (e.g., "Acceptance")
+      date: String, // Related date in string format
+      content: String, // AI-generated phone call content
+      createdAt: { type: Date, default: Date.now }, // Timestamp for the generated content
+    },
+  ],
   createdAt: { type: Date, default: Date.now },
 });
 
